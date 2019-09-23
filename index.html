@@ -1,0 +1,176 @@
+
+<!DOCTYPE html>
+<meta charset="utf-8"/>
+<html>
+<head>
+  <style>
+  html, body { width: 100%; height: 100%; background: rgb(253, 255, 153); color: #fff; }
+  body { margin: 0; overflow: hidden; }
+  canvas { width: 100%; height: 100%; }
+  </style>
+</head>
+<body>
+
+
+  <script src='three.min.js'></script>
+  <!--script src='https://github.com/mrdoob/three.js/tree/bd61540ed7d241a7f91e4a924e6d576607641ef5/build/three.min.js'></script-->
+  <script src='js/controls/TrackballControls.js'></script>
+  <script src='js/loaders/OBJLoader.js'></script>
+<script src="./dat.gui.js"></script>
+
+  <script>
+
+var camera, scene, renderer, controls;
+var geometry, material, mesh;
+var roughness, metalness;
+init();
+animate();
+
+function init() {
+document.addEventListener("keydown", onDocumentKeyDown, false);
+function onDocumentKeyDown(event) {
+    var keyCode = event.which;
+    if (keyCode == 87) {
+material.color.setHex( 0xff0000 );
+    } else if (keyCode == 83) {
+material.color.setHex( 0xffff00 );
+    } else if (keyCode == 65) {
+material.color.setHex( 0xff00ff );
+    } else if (keyCode == 68) {
+material.color.setHex( 0x0000ff );
+    } else if (keyCode == 32) {
+material.color.setHex( 0x6666ff );
+    } else if (keyCode == 88) {
+      if(metal_color.wireframe)
+material.wireframe=false;
+    else
+material.wireframe=true;
+    }
+};
+
+
+
+
+	camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.01, 10000 );
+	camera.position.z = 100;
+	camera.position.y = 100;
+
+	scene = new THREE.Scene();
+			scene.background = new THREE.CubeTextureLoader()
+					.setPath( 'cube/' )
+					.load( [ 'px.jpg',  'nx.jpg', 'py.jpg',  'ny.jpg',  'pz.jpg','nz.jpg' ] );
+scene.rotation.y = Math.PI;
+	renderer = new THREE.WebGLRenderer( { antialias: true } );
+	renderer.setSize( window.innerWidth, window.innerHeight );
+    renderer.setClearColor( 0xffffff, 1 );
+	document.body.appendChild( renderer.domElement );
+        /*  LIGHTS */ 
+        // add spotlight for the shadows
+        var spotLight = new THREE.SpotLight(0xffffff);
+        spotLight.position.set(-300, 300, 460);
+        spotLight.castShadow = true;
+        spotLight.intensity = 0.6;
+        scene.add(spotLight);
+        // add spotlight for the shadows
+        var spotLight2 = new THREE.SpotLight(0xffffff);
+        spotLight2.position.set(300, -300, -460);
+        spotLight2.castShadow = true;
+        spotLight2.intensity = 0.6;
+       // scene.add(spotLight2);
+
+    controls = new THREE.TrackballControls( camera,renderer.domElement );
+roughness = 0.1;
+metalness = 0.85;
+material = new THREE.MeshStandardMaterial( {
+    color: 0xffffff,
+    roughness: roughness,
+    metalness: metalness,
+envMap: scene.background
+} );
+//metal.wireframe=true;
+    var loader = new THREE.OBJLoader();
+
+    loader.load(
+'millenium-falcon.obj',	   
+ // resource URL
+	 //  'https://raw.githubusercontent.com/assimp/assimp/master/test/models/OBJ/spider.obj',
+     //  'https://raw.githubusercontent.com/syoyo/tinyobjloader/master/tests/issue-177.obj'	    ,
+// called when resource is loaded
+	    function ( object ) {
+        object.traverse( function( child ) {
+            if ( child instanceof THREE.Mesh ) {
+                child.material = material;
+            }
+        } );
+
+		    scene.add( object );
+             console.log( object);
+	    },
+	    // called when loading is in progresses
+	    function ( xhr ) {
+
+		    console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+
+	    },
+	    // called when loading has errors
+	    function ( error ) {
+
+		    console.log( 'An error happened' );
+
+	    }
+    );
+    controls.update();
+			function handleColorChange( color ) {
+
+				return function ( value ) {
+
+					if ( typeof value === 'string' ) {
+
+						value = value.replace( '#', '0x' );
+
+					}
+
+					color.setHex( value );
+
+				};
+
+			}
+var data ={
+color :  material.color.getHex(),
+emissive : material.emissive.getHex()
+}
+var gui = new dat.GUI();
+var box = gui.addFolder('Material');
+gui.add(material, 'roughness', 0, 1);
+gui.add(material, 'metalness', 0, 1);
+gui.addColor(data, 'color').onChange( handleColorChange( material.color ) );
+gui.addColor(data, 'emissive').onChange( handleColorChange( material.emissive ) );
+box.add(material, 'wireframe').listen();
+box.open();
+var params = {
+    loadFile : function() { 
+            document.getElementById('myInput').click();
+    }
+};
+var gui = new dat.GUI();
+gui.add(params, 'loadFile').name('Load Obj file');
+}
+
+function animate() {
+
+	requestAnimationFrame( animate );
+
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+
+    renderer.setSize( window.innerWidth, window.innerHeight );
+
+    controls.update();
+	renderer.render( scene, camera );
+
+}
+
+animate();
+  </script>
+</body>
+</html>
