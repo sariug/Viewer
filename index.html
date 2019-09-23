@@ -32,13 +32,16 @@ function init() {
 
 	camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.01, 10000 );
 	camera.position.z = 100;
-	camera.rotation.y = 90 * Math.PI / 180;
+    camera.position.set(0, 2, 0);
+
+    camera.lookAt(scene.position);
 
 	scene = new THREE.Scene();
 			scene.background = new THREE.CubeTextureLoader()
 					.setPath( 'cube/' )
 					.load( [ 'px.jpg',  'nx.jpg', 'py.jpg',  'ny.jpg',  'pz.jpg','nz.jpg' ] );
 scene.rotation.y = Math.PI;
+    camera.lookAt(scene.position);
 	renderer = new THREE.WebGLRenderer( { antialias: true } );
 	renderer.setSize( window.innerWidth, window.innerHeight );
     renderer.setClearColor( 0xffffff, 1 );
