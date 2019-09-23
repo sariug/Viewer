@@ -93,7 +93,7 @@ envMap: scene.background
     loader.load(
 'millenium-falcon.obj',	   
  // resource URL
-	 //  'https://raw.githubusercontent.com/assimp/assimp/master/test/models/OBJ/spider.obj',
+	//   'https://raw.githubusercontent.com/assimp/assimp/master/test/models/OBJ/spider.obj',
      //  'https://raw.githubusercontent.com/syoyo/tinyobjloader/master/tests/issue-177.obj'	    ,
 // called when resource is loaded
 	    function ( object ) {
@@ -102,6 +102,14 @@ envMap: scene.background
                 child.material = material;
             }
         } );
+var xAxis = new THREE.Vector3(0,0,1);
+   var rotObjectMatrix = new THREE.Matrix4();
+    rotObjectMatrix.makeRotationAxis(xAxis, 3.1415);
+    object.matrix.multiply(rotObjectMatrix);
+
+
+    // new code for Three.js r59+:
+    object.rotation.setFromRotationMatrix(object.matrix);
 
 		    scene.add( object );
              console.log( object);
