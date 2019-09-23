@@ -32,7 +32,7 @@ function init() {
 
 	camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.01, 10000 );
 	camera.position.z = 100;
-	camera.rotate.z = 90 * Math.PI / 180;
+	camera.rotation.y = 90 * Math.PI / 180;
 
 	scene = new THREE.Scene();
 			scene.background = new THREE.CubeTextureLoader()
@@ -134,13 +134,6 @@ gui.addColor(data, 'color').onChange( handleColorChange( material.color ) );
 gui.addColor(data, 'emissive').onChange( handleColorChange( material.emissive ) );
 box.add(material, 'wireframe').listen();
 box.open();
-var params = {
-    loadFile : function() { 
-            document.getElementById('myInput').click();
-    }
-};
-var gui = new dat.GUI();
-gui.add(params, 'loadFile').name('Load Obj file');
 }
 
 function animate() {
