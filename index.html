@@ -102,7 +102,7 @@ envMap: scene.background
                 child.material = material;
             }
         } );
-var xAxis = new THREE.Vector3(0,0,1);
+var xAxis = new THREE.Vector3(1,0,0);
    var rotObjectMatrix = new THREE.Matrix4();
     rotObjectMatrix.makeRotationAxis(xAxis, 3.1415);
     object.matrix.multiply(rotObjectMatrix);
